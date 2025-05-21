@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./MyCart.css";
+import { useNavigate } from 'react-router-dom';
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const MyCart = () => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
 
