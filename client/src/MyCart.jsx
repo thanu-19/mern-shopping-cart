@@ -117,7 +117,7 @@ const MyCart = () => {
           <h3 className="total">Total Amount: ₹ {totalAmount}</h3>
           <div className="cart-buttons">
         
-            <button className="continue"  onClick={() => window.location.href = "/products"}>🛒 Continue Shopping</button>
+            <button className="continue"  onClick={() => navigate('/products')}>🛒 Continue Shopping</button>
 
             <button className="payment">Proceed to Payment</button>
           </div>
