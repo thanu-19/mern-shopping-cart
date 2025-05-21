@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './Snacks.css'; // Use the same CSS styles as MilkProducts.css
 import axios from 'axios';
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const Snacks = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Snacks = () => {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get('http://localhost:5000/snacks');
+    const res = await axios.get(`${backendURL}/snacks`);
     setItems(res.data);
   };
 
@@ -47,13 +48,13 @@ const Snacks = () => {
     try {
       if (editingItem) {
         // Update snack
-        await axios.put(`http://localhost:5000/snacks/${editingItem._id}`, data, {
+        await axios.put(`${backendURL}/snacks/${editingItem._id}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setEditingItem(null);
       } else {
         // Add new snack
-        await axios.post('http://localhost:5000/snacks', data, {
+        await axios.post(`${backendURL}/snacks`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -75,7 +76,7 @@ const Snacks = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/snacks/${id}`);
+      await axios.delete(`${backendURL}/snacks/${id}`);
       fetchItems();
     } catch (error) {
       console.error(error);
@@ -130,7 +131,7 @@ const Snacks = () => {
           <tbody>
             {items.map((item) => (
               <tr key={item._id}>
-                <td><img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} width="60" /></td>
+                <td><img src={`${backendURL}/uploads/${item.image}`} alt={item.name} width="60" /></td>
                 <td>{item.name}</td>
                 <td>₹{item.cost}</td>
                 <td>

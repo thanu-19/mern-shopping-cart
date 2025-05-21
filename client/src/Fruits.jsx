@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import './MilkProducts.css'; // Reuse the same CSS
 import axios from 'axios';
 
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const Fruits = () => {
   const navigate = useNavigate();
   const [editingItem, setEditingItem] = useState(null);
@@ -23,7 +24,7 @@ const Fruits = () => {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get('http://localhost:5000/fruits');
+    const res = await axios.get(`${backendURL}/fruits`);
     setItems(res.data);
   };
 
@@ -47,12 +48,12 @@ const Fruits = () => {
 
     try {
       if (editingItem) {
-        await axios.put(`http://localhost:5000/fruits/${editingItem._id}`, data, {
+        await axios.put(`${backendURL}/fruits/${editingItem._id}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
         setEditingItem(null);
       } else {
-        await axios.post('http://localhost:5000/fruits', data, {
+        await axios.post(`${backendURL}/fruits`, data, {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
@@ -74,7 +75,7 @@ const Fruits = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/fruits/${id}`);
+      await axios.delete(`${backendURL}/fruits/${id}`);
       fetchItems();
     } catch (error) {
       console.error(error);
@@ -129,7 +130,7 @@ const Fruits = () => {
           <tbody>
             {items.map((item) => (
               <tr key={item._id}>
-                <td><img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} width="60" /></td>
+                <td><img src={`${backendURL}/uploads/${item.image}`} alt={item.name} width="60" /></td>
                 <td>{item.name}</td>
                 <td>₹{item.cost}</td>
                 <td>

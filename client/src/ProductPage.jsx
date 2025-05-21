@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ProductPage.css";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const ProductPage = () => {
   const navigate = useNavigate();
@@ -23,27 +24,27 @@ const ProductPage = () => {
     }
 
     // Fetch milk products
-    fetch("http://localhost:5000/milk-products")
+    fetch(`${backendURL}/milk-products`)
       .then((res) => res.json())
       .then((data) => setMilkProducts(data))
       .catch((err) => console.error("Error fetching milk products:", err));
 
-      fetch("http://localhost:5000/fruits")
+      fetch(`${backendURL}/fruits`)
       .then((res) => res.json())
       .then((data) => setFruits(data))
       .catch((err) => console.error("Error fetching fruits:", err));
 
-      fetch("http://localhost:5000/vegetables")
+      fetch(`${backendURL}/vegetables`)
       .then((res) => res.json())
       .then((data) => setVegetables(data))
       .catch((err) => console.error("Error fetching vegetables:", err));
 
-      fetch("http://localhost:5000/snacks")
+      fetch(`${backendURL}/snacks`)
       .then((res) => res.json())
       .then((data) => setSnacks(data))
       .catch((err) => console.error("Error fetching snacks:", err));
 
-      fetch("http://localhost:5000/groceries")
+      fetch(`${backendURL}/groceries`)
       .then((res) => res.json())
       .then((data) => setGroceries(data))
       .catch((err) => console.error("Error fetching groceries:", err));
@@ -207,7 +208,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="product-box">
-      <img src={`http://localhost:5000/uploads/${product.image}`} alt={product.name} />
+      <img src={`${backendURL}/uploads/${product.image}`} alt={product.name} />
       <h4>{product.name}</h4>
       <p>₹ {product.cost}</p>
       {added ? (

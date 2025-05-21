@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./MyCart.css";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const MyCart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -94,7 +95,7 @@ const MyCart = () => {
               {cartItems.map((item, index) => (
                 <tr key={item._id || index}>
                   <td>
-                    <img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} />
+                    <img src={`${backendURL}/uploads/${item.image}`} alt={item.name} />
                   </td>
                   <td>{item.name}</td>
                   <td>{item.cost}</td>

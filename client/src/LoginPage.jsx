@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles.css';
 
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const handleLogin = async () => {
     }
   
     try {
-      const res = await fetch('http://localhost:5000/login', {
+      const res = await fetch(`${backendURL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

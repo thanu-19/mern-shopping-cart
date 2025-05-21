@@ -4,6 +4,8 @@ import Sidebar from './Sidebar';
 import './MilkProducts.css';
 import axios from 'axios';
 
+const backendURL = import.meta.env.VITE_BACKEND_URL;
+
 const MilkProducts = () => {
   const navigate = useNavigate();
   const [editingItem, setEditingItem] = useState(null);
@@ -22,7 +24,7 @@ const MilkProducts = () => {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get('http://localhost:5000/milk-products');
+    const res = await axios.get(`${backendURL}/milk-products`);
     setItems(res.data);
   };
 
@@ -34,21 +36,6 @@ const MilkProducts = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     const data = new FormData();
-//     data.append('name', formData.name);
-//     data.append('cost', formData.cost);
-//     data.append('image', formData.image);
-
-//     await axios.post('http://localhost:5000/milk-products', data, {
-//       headers: { 'Content-Type': 'multipart/form-data' },
-//     });
-
-//     setFormData({ name: '', cost: '', image: null });
-//     fetchItems();
-//   };
 
 const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,13 +49,13 @@ const handleSubmit = async (e) => {
     try {
       if(editingItem) {
         // Update product
-        await axios.put(`http://localhost:5000/milk-products/${editingItem._id}`, data, {
+        await axios.put(`${backendURL}/milk-products/${editingItem._id}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setEditingItem(null); // Reset editing state
       } else {
         // Add new product
-        await axios.post('http://localhost:5000/milk-products', data, {
+        await axios.post(`${backendURL}/milk-products`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -90,7 +77,7 @@ const handleSubmit = async (e) => {
   
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/milk-products/${id}`);
+      await axios.delete(`${backendURL}/milk-products/${id}`);
       fetchItems();
     } catch (error) {
       console.error(error);
@@ -142,19 +129,11 @@ const handleSubmit = async (e) => {
               <th>Update/Delete</th>
             </tr>
           </thead>
-          {/* <tbody>
-            {items.map((item) => (
-              <tr key={item._id}>
-                <td><img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} width="60" /></td>
-                <td>{item.name}</td>
-                <td>₹{item.cost}</td>
-              </tr>
-            ))}
-          </tbody> */}
+        
           <tbody>
           {items.map((item) => (
             <tr key={item._id}>
-              <td><img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} width="60" /></td>
+              <td><img src={`${backendURL}/uploads/${item.image}`} alt={item.name} width="60" /></td>
               <td>{item.name}</td>
               <td>₹{item.cost}</td>
               <td>

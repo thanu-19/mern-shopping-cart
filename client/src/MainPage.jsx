@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MainPage.css";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const MainPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -52,7 +53,7 @@ useEffect(() => {
       return;
     }
   
-    fetch(`http://localhost:5000/api/user?email=${loggedInEmail}`)
+    fetch(`${backendURL}/api/user?email=${loggedInEmail}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.name) setUserName(data.name);

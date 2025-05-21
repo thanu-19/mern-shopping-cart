@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import './MilkProducts.css';
 import axios from 'axios';
 
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 const Groceries = () => {
   const navigate = useNavigate();
   const [editingItem, setEditingItem] = useState(null);
@@ -22,7 +23,7 @@ const Groceries = () => {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get('http://localhost:5000/groceries');
+    const res = await axios.get(`${backendURL}/groceries`);
     setItems(res.data);
   };
 
@@ -47,13 +48,13 @@ const handleSubmit = async (e) => {
     try {
       if(editingItem) {
         // Update product
-        await axios.put(`http://localhost:5000/groceries/${editingItem._id}`, data, {
+        await axios.put(`${backendURL}/groceries/${editingItem._id}`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         setEditingItem(null); // Reset editing state
       } else {
         // Add new product
-        await axios.post('http://localhost:5000/groceries', data, {
+        await axios.post(`${backendURL}/groceries`, data, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -75,7 +76,7 @@ const handleSubmit = async (e) => {
   
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/groceries/${id}`);
+      await axios.delete(`${backendURL}/groceries/${id}`);
       fetchItems();
     } catch (error) {
       console.error(error);
@@ -131,7 +132,7 @@ const handleSubmit = async (e) => {
           <tbody>
           {items.map((item) => (
             <tr key={item._id}>
-              <td><img src={`http://localhost:5000/uploads/${item.image}`} alt={item.name} width="60" /></td>
+              <td><img src={`${backendURL}/uploads/${item.image}`} alt={item.name} width="60" /></td>
               <td>{item.name}</td>
               <td>₹{item.cost}</td>
               <td>
