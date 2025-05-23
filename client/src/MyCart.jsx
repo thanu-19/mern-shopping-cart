@@ -75,22 +75,7 @@ const MyCart = () => {
 
   };
 
-  // const handlePayment = async () => {
-  //   try {
-  //     const res = await fetch(`${backendURL}/create-order`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ total: totalAmount }),
-  //     });
-  
-  //     const data = await res.json();
-  //     window.location.href = data.approvalUrl; // Redirects to PayPal
-  //   } catch (err) {
-  //     console.error("Error initiating PayPal payment:", err);
-  //   }
-  // };
+
   const handlePayment = async () => {
     try {
       const res = await fetch(`${backendURL}/create-order`, {

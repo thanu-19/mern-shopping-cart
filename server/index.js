@@ -16,17 +16,6 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// function environment() {
-//   return new paypal.core.SandboxEnvironment(
-//     process.env.PAYPAL_CLIENT_ID,
-//     process.env.PAYPAL_CLIENT_SECRET
-//   );
-// }
-
-// function paypalClient() {
-//   return new paypal.core.PayPalHttpClient(environment());
-// }
-
 const paypal = require('@paypal/checkout-server-sdk');
 
 function environment() {
@@ -509,7 +498,7 @@ app.delete('/groceries/:id', async (req, res) => {
 app.post("/create-order", async (req, res) => {
   console.log("Received order request:", req.body);
 
-  const { totalAmount } = req.body;
+  const { total } = req.body;
 
   const request = new paypal.orders.OrdersCreateRequest();
   request.prefer("return=representation");
@@ -519,7 +508,7 @@ app.post("/create-order", async (req, res) => {
       {
         amount: {
           currency_code: "USD",
-          value: totalAmount.toString(),
+          value: total.toString(),
         },
       },
     ],
