@@ -13,6 +13,7 @@ import Vegetables from './Vegetables';
 import Fruits from './Fruits';
 import Groceries from './Groceries';
 import MyCart from './MyCart';
+import PaymentSuccess from './PaymentSuccess';
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/fruits" element={<Fruits />} />
         <Route path="/groceries" element={<Groceries />} />
         <Route path="/mycart" element={<MyCart />} />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
         
 
       </Routes>

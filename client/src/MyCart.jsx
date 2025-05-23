@@ -75,6 +75,23 @@ const MyCart = () => {
 
   };
 
+  const handlePayment = async () => {
+    try {
+      const res = await fetch(`${backendURL}/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ total: totalAmount }),
+      });
+  
+      const data = await res.json();
+      window.location.href = data.approvalUrl; // Redirects to PayPal
+    } catch (err) {
+      console.error("Error initiating PayPal payment:", err);
+    }
+  };
+  
   return (
     <div className="cart-container">
       <h2>My Cart 🛒</h2>
@@ -121,7 +138,9 @@ const MyCart = () => {
         
             <button className="continue"  onClick={() => navigate('/products')}>🛒 Continue Shopping</button>
 
-            <button className="payment">Proceed to Payment</button>
+            <button className="payment" onClick={handlePayment}>
+  Proceed to Payment
+</button>
           </div>
         </>
       )}

@@ -1,3 +1,4 @@
+const paypal = require("@paypal/checkout-server-sdk");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -11,6 +12,16 @@ app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+function environment() {
+  return new paypal.core.SandboxEnvironment(
+    process.env.PAYPAL_CLIENT_ID,
+    process.env.PAYPAL_CLIENT_SECRET
+  );
+}
+
+function paypalClient() {
+  return new paypal.core.PayPalHttpClient(environment());
+}
 
 
 mongoose.connect(process.env.MONGO_URI)
@@ -399,6 +410,78 @@ app.delete('/groceries/:id', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+// app.post("/create-order", async (req, res) => {
+//   const totalAmount = req.body.total;
+
+//   const request = new paypal.orders.OrdersCreateRequest();
+//   request.prefer("return=representation");
+//   request.requestBody({
+//     intent: "CAPTURE",
+//     purchase_units: [{
+//       amount: {
+//         currency_code: "INR",
+//         value: totalAmount.toString(),
+//       },
+//     }],
+//     application_context: {
+//       // return_url: "https://mern-shopping-cart-rl8t.onrender.com/payment-success",
+//       // cancel_url: "https://mern-shopping-cart-rl8t.onrender.com/mycart",
+//       return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+//     cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+//     },
+//   });
+
+//   try {
+//     const order = await paypalClient().execute(request);
+//     const approvalUrl = order.result.links.find(link => link.rel === "approve").href;
+//     res.json({ approvalUrl });
+//   } catch (err) {
+//     console.error("PayPal order error:", err);
+//     res.status(500).send("Failed to create PayPal order");
+//   }
+// });
+
+
+app.post("/create-order", async (req, res) => {
+  const { totalAmount } = req.body;
+
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.prefer("return=representation");
+  request.requestBody({
+    intent: "CAPTURE",
+    purchase_units: [
+      {
+        amount: {
+          currency_code: "INR",
+          value: totalAmount.toString(),
+        },
+      },
+    ],
+    application_context: {
+      return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+      cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+    },
+  });
+
+  try {
+    const order = await paypalClient.execute(request);
+    res.status(200).json({ id: order.result.id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Failed to create order");
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
