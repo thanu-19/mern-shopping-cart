@@ -75,6 +75,22 @@ const MyCart = () => {
 
   };
 
+  // const handlePayment = async () => {
+  //   try {
+  //     const res = await fetch(`${backendURL}/create-order`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ total: totalAmount }),
+  //     });
+  
+  //     const data = await res.json();
+  //     window.location.href = data.approvalUrl; // Redirects to PayPal
+  //   } catch (err) {
+  //     console.error("Error initiating PayPal payment:", err);
+  //   }
+  // };
   const handlePayment = async () => {
     try {
       const res = await fetch(`${backendURL}/create-order`, {
@@ -86,7 +102,14 @@ const MyCart = () => {
       });
   
       const data = await res.json();
-      window.location.href = data.approvalUrl; // Redirects to PayPal
+      console.log("Payment initiation response:", data);
+  
+      if (data.approvalUrl) {
+        window.location.href = data.approvalUrl;
+      } else {
+        console.error("approvalUrl not found in response");
+        // Optionally show an error to user here
+      }
     } catch (err) {
       console.error("Error initiating PayPal payment:", err);
     }
