@@ -1,4 +1,4 @@
-const paypal = require("@paypal/checkout-server-sdk");
+// const paypal = require("@paypal/checkout-server-sdk");
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -16,6 +16,19 @@ app.use(cors({
 app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// function environment() {
+//   return new paypal.core.SandboxEnvironment(
+//     process.env.PAYPAL_CLIENT_ID,
+//     process.env.PAYPAL_CLIENT_SECRET
+//   );
+// }
+
+// function paypalClient() {
+//   return new paypal.core.PayPalHttpClient(environment());
+// }
+
+const paypal = require('@paypal/checkout-server-sdk');
+
 function environment() {
   return new paypal.core.SandboxEnvironment(
     process.env.PAYPAL_CLIENT_ID,
@@ -23,10 +36,9 @@ function environment() {
   );
 }
 
-function paypalClient() {
+function getPayPalClient() {
   return new paypal.core.PayPalHttpClient(environment());
 }
-
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB (projectDB)'))
@@ -456,30 +468,72 @@ app.delete('/groceries/:id', async (req, res) => {
 //   }
 // });
 
+// app.post("/create-order", async (req, res) => {
+//   console.log("Received order request:", req.body);
+
+//   try {
+//     const { totalAmount } = req.body;
+
+//     const order = await paypalClient.orders.create({
+//       intent: "CAPTURE",
+//       purchase_units: [
+//         {
+//           amount: {
+//             currency_code: "USD",
+//             value: totalAmount.toString(),
+//           },
+//         },
+//       ],
+//       application_context: {
+//         return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+//         cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+//       },
+//     });
+
+//     // You need to return the approval link to redirect the user
+//     const approvalUrl = order.links.find(link => link.rel === "approve").href;
+//     res.json({ approvalUrl });
+
+//   } catch (error) {
+//     console.error("PayPal order creation failed:", error.message);
+//     res.status(500).json({ error: "Payment creation failed" });
+//   }
+// });
+
+
+
+
+
+
+
 app.post("/create-order", async (req, res) => {
   console.log("Received order request:", req.body);
 
-  try {
-    const { totalAmount } = req.body;
+  const { totalAmount } = req.body;
 
-    const order = await paypalClient.orders.create({
-      intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value: totalAmount.toString(),
-          },
+  const request = new paypal.orders.OrdersCreateRequest();
+  request.prefer("return=representation");
+  request.requestBody({
+    intent: "CAPTURE",
+    purchase_units: [
+      {
+        amount: {
+          currency_code: "USD",
+          value: totalAmount.toString(),
         },
-      ],
-      application_context: {
-        return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
-        cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
       },
-    });
+    ],
+    application_context: {
+      return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+      cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+    },
+  });
 
-    // You need to return the approval link to redirect the user
-    const approvalUrl = order.links.find(link => link.rel === "approve").href;
+  try {
+    const client = getPayPalClient(); // ✅ Correct usage
+    const order = await client.execute(request);
+
+    const approvalUrl = order.result.links.find(link => link.rel === "approve").href;
     res.json({ approvalUrl });
 
   } catch (error) {
