@@ -453,33 +453,62 @@ app.delete('/groceries/:id', async (req, res) => {
 // });
 
 
-app.post("/create-order", async (req, res) => {
-  const { totalAmount } = req.body;
+// app.post("/create-order", async (req, res) => {
+//   const { totalAmount } = req.body;
 
-  const request = new paypal.orders.OrdersCreateRequest();
-  request.prefer("return=representation");
-  request.requestBody({
-    intent: "CAPTURE",
-    purchase_units: [
-      {
-        amount: {
-          currency_code: "INR",
-          value: totalAmount.toString(),
-        },
-      },
-    ],
-    application_context: {
-      return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
-      cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
-    },
-  });
+//   const request = new paypal.orders.OrdersCreateRequest();
+//   request.prefer("return=representation");
+//   request.requestBody({
+//     intent: "CAPTURE",
+//     purchase_units: [
+//       {
+//         amount: {
+//           currency_code: "INR",
+//           value: totalAmount.toString(),
+//         },
+//       },
+//     ],
+//     application_context: {
+//       return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+//       cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+//     },
+//   });
+
+//   try {
+//     const order = await paypalClient.execute(request);
+//     res.status(200).json({ id: order.result.id });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Failed to create order");
+//   }
+// });
+
+app.post("/create-order", async (req, res) => {
+  console.log("Received order request:", req.body); // 👈 ADD THIS LINE
 
   try {
-    const order = await paypalClient.execute(request);
-    res.status(200).json({ id: order.result.id });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Failed to create order");
+    const { totalAmount } = req.body;
+
+    const order = await paypalClient.orders.create({
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "USD",
+            value: totalAmount.toString(),
+          },
+        },
+      ],
+      application_context: {
+        return_url: "https://mern-shopping-cart-rl8t.onrender.com/payment-success",
+        cancel_url: "https://mern-shopping-cart-rl8t.onrender.com/mycart",
+      },
+    });
+
+    res.json({ id: order.id });
+  } catch (error) {
+    console.error("PayPal order creation failed:", error.message);
+    res.status(500).json({ error: "Payment creation failed" });
   }
 });
 
