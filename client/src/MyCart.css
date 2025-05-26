@@ -10,7 +10,7 @@ html, body {
   overflow-x: hidden;  /* Prevent horizontal scroll */
 }
 
-   .cart-container {
+   /* .cart-container {
     max-width: 900px;
     margin: 30px auto;
     padding: 20px;
@@ -25,8 +25,47 @@ html, body {
     margin-bottom: 20px;
     color: #333;
   }
+   */
+   .cart-container {
+    max-width: 1100px; /* Increased width */
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    font-size: 18px; /* Increased font size */
+    line-height: 1.6;
+  }
   
-  .cart-table {
+  .cart-container h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 28px;
+    color: #222;
+  }
+
+  .cart-container button.go-back-btn {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .cart-container button.go-back-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+  }
+  
+   .cart-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;

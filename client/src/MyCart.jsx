@@ -110,24 +110,27 @@ const MyCart = () => {
   
   return (
     <div className="cart-container">
-      <h2>My Cart 🛒</h2>
-      <button
-        onClick={() => navigate("/products")}
-        style={{
-          marginTop: "20px",
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer"
-        }}
-      >
-        Go back
-      </button>
+      {/* <h2>My Cart 🛒</h2>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
-      ) : (
+        <button
+  className="go-back-btn"
+  onClick={() => navigate("/products")}
+> Go Back </button>
+
+      ) : ( */}
+      <h2>My Cart 🛒</h2>
+{cartItems.length === 0 ? (
+  <div>
+    <p>Your cart is empty.</p>
+    <button
+      className="go-back-btn"
+      onClick={() => navigate("/products")}
+    >
+      Go Back
+    </button>
+  </div>
+) : (
         <>
           <table className="cart-table">
             <thead>
