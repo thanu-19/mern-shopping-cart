@@ -34,10 +34,15 @@ html, body {
     padding: 0;
   }
   
-  .sidebar ul li a{
+  .sidebar ul li {
     margin: 27px 0;
     color:#332e52 ;
     cursor: pointer;
+  }
+
+  .sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
   }
   
   .sidebar ul li a:hover {
