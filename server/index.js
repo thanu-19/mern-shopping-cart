@@ -531,6 +531,25 @@ app.post("/create-order", async (req, res) => {
   }
 });
 
+app.get("/capture-order", async (req, res) => {
+  const { token } = req.query;
+
+  const request = new paypal.orders.OrdersCaptureRequest(token);
+  request.requestBody({});
+
+  try {
+    const client = getPayPalClient();
+    const capture = await client.execute(request);
+
+    const shippingAddress = capture.result.purchase_units[0].shipping.address;
+    res.json({ shippingAddress });
+
+  } catch (error) {
+    console.error("Error capturing PayPal order:", error.message);
+    res.status(500).json({ error: "Failed to capture order" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
