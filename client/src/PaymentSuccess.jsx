@@ -62,6 +62,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+const backendURL = import.meta.env.VITE_BACKEND_URL;
 
 const PaymentSuccess = () => {
   const [orderDetails, setOrderDetails] = useState(null);
@@ -74,7 +75,7 @@ const PaymentSuccess = () => {
       const userEmail = localStorage.getItem("userEmail");
 
       try {
-        const res = await fetch(`https://your-backend-url.com/capture-order?token=${token}`);
+        const res = await fetch(`${backendURL}/capture-order?token=${token}`);
         const data = await res.json();
 
         const cartData = JSON.parse(localStorage.getItem(`cartBeforePayment_${userEmail}`));
