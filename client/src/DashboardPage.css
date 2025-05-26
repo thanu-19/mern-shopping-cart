@@ -34,13 +34,13 @@ html, body {
     padding: 0;
   }
   
-  .sidebar ul li {
+  .sidebar ul li a{
     margin: 27px 0;
     color:#332e52 ;
     cursor: pointer;
   }
   
-  .sidebar ul li:hover {
+  .sidebar ul li a:hover {
     font-weight: bold;
     text-decoration: none;
     color:#221d3d ;
