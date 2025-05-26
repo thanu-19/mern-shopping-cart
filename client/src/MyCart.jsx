@@ -147,7 +147,7 @@ const MyCart = () => {
               {cartItems.map((item, index) => (
                 <tr key={item._id || index}>
                   <td>
-                  <img src={product.image} alt={product.name} />
+                  <img src={item.image} alt={item.name} />
 
                   </td>
                   <td>{item.name}</td>
