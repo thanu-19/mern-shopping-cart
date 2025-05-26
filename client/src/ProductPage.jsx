@@ -11,7 +11,7 @@ const ProductPage = () => {
   const [fruits, setFruits] = useState([]);
   const [snacks, setSnacks] = useState([]);
   const [groceries, setGroceries] = useState([]);
-  
+  const [bakery, setBakery] = useState([]);
   const [vegetables, setVegetables] = useState([]);
   const dropdownRef = useRef(null);
 
@@ -48,6 +48,11 @@ const ProductPage = () => {
       .then((res) => res.json())
       .then((data) => setGroceries(data))
       .catch((err) => console.error("Error fetching groceries:", err));
+
+      fetch(`${backendURL}/bakery`)
+      .then((res) => res.json())
+      .then((data) => setGroceries(data))
+      .catch((err) => console.error("Error fetching bakery:", err));
 
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -125,6 +130,13 @@ const ProductPage = () => {
         <h2 style={{ marginTop: "60px" }}>🍼 Groceries</h2>
         <div className="products-popup">
           {groceries.map((product) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+
+        <h2 style={{ marginTop: "60px" }}>🍰 Bakery Items</h2>
+        <div className="products-popup">
+          {snacks.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

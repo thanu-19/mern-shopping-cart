@@ -36,11 +36,14 @@ html, body {
   
   .sidebar ul li {
     margin: 27px 0;
+    color:#332e52 ;
     cursor: pointer;
   }
   
   .sidebar ul li:hover {
     font-weight: bold;
+    text-decoration: none;
+    color:#221d3d ;
   }
   .main-content {
     flex-grow: 1;

@@ -14,6 +14,7 @@ import Fruits from './Fruits';
 import Groceries from './Groceries';
 import MyCart from './MyCart';
 import PaymentSuccess from './PaymentSuccess';
+import Bakery from './Bakery';
 
 
 
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/vegetables" element={<Vegetables />} />
         <Route path="/fruits" element={<Fruits />} />
         <Route path="/groceries" element={<Groceries />} />
+        <Route path="/bakery" element={<Bakery/>} />
         <Route path="/mycart" element={<MyCart />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         

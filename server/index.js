@@ -435,6 +435,69 @@ app.delete('/groceries/:id', async (req, res) => {
 
 
 
+
+
+
+// Mongoose Schema
+const bakerySchema = new mongoose.Schema({
+  name: String,
+  cost: Number,
+  image: String,
+  category: { type: String, default: 'bakery' }
+});
+
+const Bakery = mongoose.model('Bakery', bakerySchema);
+
+
+// POST: Add new grocery
+app.post('/bakery', upload.single('image'), async (req, res) => {
+  const { name, cost } = req.body;
+  const image = req.file.path;
+
+  const bakery = new Bakery({ name, cost, image });
+  await bakery.save();
+  res.status(201).send('Bakery item added');
+});
+
+// GET: All groceries
+app.get('/bakery', async (req, res) => {
+  const bakery = await Bakery.find();
+  res.json(bakery);
+});
+
+// PUT: Update grocery item
+app.put('/bakery/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { name, cost } = req.body;
+  let updateData = { name, cost };
+
+  if (req.file) {
+    updateData.image = req.file.path;
+  }
+
+  try {
+    await Bakery.findByIdAndUpdate(id, updateData);
+    res.status(200).send('Bakery item updated');
+  } catch (err) {
+    res.status(500).send('Error updating bakery item');
+  }
+});
+
+// DELETE: Delete grocery item
+app.delete('/bakery/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Bakery.findByIdAndDelete(id);
+    res.status(200).send('Bakery item deleted');
+  } catch (err) {
+    res.status(500).send('Error deleting Bakery item');
+  }
+});
+
+
+
+
 // app.post("/create-order", async (req, res) => {
 //   console.log("Received order request:", req.body);
 
