@@ -75,31 +75,6 @@ const MyCart = () => {
 
   };
 
-
-  // const handlePayment = async () => {
-  //   try {
-  //     const res = await fetch(`${backendURL}/create-order`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ total: totalAmount }),
-  //     });
-  
-  //     const data = await res.json();
-  //     console.log("Payment initiation response:", data);
-  
-  //     if (data.approvalUrl) {
-  //       window.location.href = data.approvalUrl;
-  //     } else {
-  //       console.error("approvalUrl not found in response");
-  //       // Optionally show an error to user here
-  //     }
-  //   } catch (err) {
-  //     console.error("Error initiating PayPal payment:", err);
-  //   }
-  // };
-  
   const handlePayment = async () => {
     try {
       // 🧠 Save current cart/amount to localStorage before redirect
@@ -136,6 +111,20 @@ const MyCart = () => {
   return (
     <div className="cart-container">
       <h2>My Cart 🛒</h2>
+      <button
+        onClick={() => navigate("/products")}
+        style={{
+          marginTop: "20px",
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer"
+        }}
+      >
+        Go back
+      </button>
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
