@@ -14,8 +14,8 @@ const Sidebar = ({ onLogout }) => {
       <li><Link to="/vegetables">Vegetables</Link></li>
       <li><Link to="/fruits">Fruits</Link></li>
       <li><Link to="/groceries">Groceries</Link></li>
-        
-        <li>Bakery Items</li>
+      <li><Link to="/bakery">Bakery</Link></li> 
+      
       </ul>
       <button className="logout-button" onClick={onLogout}>
         Logout
