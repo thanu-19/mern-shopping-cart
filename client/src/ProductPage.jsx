@@ -208,7 +208,8 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="product-box">
-      <img src={`${backendURL}/uploads/${product.image}`} alt={product.name} />
+      <img src={product.image} alt={product.name} />
+
       <h4>{product.name}</h4>
       <p>₹ {product.cost}</p>
       {added ? (
