@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -14,7 +16,14 @@ app.use(cors({
   origin: 'https://mern-shopping-cart-one.vercel.app'  // your frontend URL here
 }));
 app.use(express.json());
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Cloudinary config
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,    // from .env
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
+});
 
 const paypal = require('@paypal/checkout-server-sdk');
 
@@ -105,28 +114,33 @@ app.get("/api/user", async (req, res) => {
 
 
 
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const category = req.body.category?.toLowerCase() || 'general'; // Default to 'general'
+    return {
+      folder: category,
+      allowed_formats: ['jpg', 'jpeg', 'png'],
+      transformation: [{ width: 500, height: 500, crop: 'limit' }]
+    };
+  }
+});
+const upload = multer({ storage });
 
 
 const milkSchema = new mongoose.Schema({
   name: String,
   cost: Number,
-  image: String
+  image: String,
+  category: { type: String, default: 'milkproducts' }
 });
 
 const MilkProduct = mongoose.model('MilkProduct', milkSchema);
 
-// multer config
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
-});
-
-const upload = multer({ storage });
-
 // POST route
 app.post('/milk-products', upload.single('image'), async (req, res) => {
   const { name, cost } = req.body;
-  const image = req.file.filename;
+  const image = req.file.path;
 
   const product = new MilkProduct({ name, cost, image });
   await product.save();
@@ -146,7 +160,7 @@ app.put('/milk-products/:id', upload.single('image'), async (req, res) => {
   let updateData = { name, cost };
 
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.path;
   }
 
   try {
@@ -181,14 +195,15 @@ app.delete('/milk-products/:id', async (req, res) => {
 const snackSchema = new mongoose.Schema({
   name: String,
   cost: Number,
-  image: String
+  image: String,
+  category: { type: String, default: 'snacks' }
 });
 
 const Snack = mongoose.model('Snack', snackSchema);
 // POST route - Add Snack
 app.post('/snacks', upload.single('image'), async (req, res) => {
   const { name, cost } = req.body;
-  const image = req.file.filename;
+  const image = req.file.path;
 
   const snack = new Snack({ name, cost, image });
   await snack.save();
@@ -208,7 +223,7 @@ app.put('/snacks/:id', upload.single('image'), async (req, res) => {
   let updateData = { name, cost };
 
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.path;
   }
 
   try {
@@ -239,7 +254,8 @@ app.delete('/snacks/:id', async (req, res) => {
 const vegetableSchema = new mongoose.Schema({
   name: String,
   cost: Number,
-  image: String
+  image: String,
+  category: { type: String, default: 'vegetable' }
 });
 
 const Vegetable = mongoose.model('Vegetable', vegetableSchema);
@@ -247,7 +263,7 @@ const Vegetable = mongoose.model('Vegetable', vegetableSchema);
 // POST - Add Vegetable
 app.post('/vegetables', upload.single('image'), async (req, res) => {
   const { name, cost } = req.body;
-  const image = req.file.filename;
+  const image = req.file.path;
 
   const veg = new Vegetable({ name, cost, image });
   await veg.save();
@@ -267,7 +283,7 @@ app.put('/vegetables/:id', upload.single('image'), async (req, res) => {
   let updateData = { name, cost };
 
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.path;
   }
 
   try {
@@ -302,7 +318,8 @@ app.delete('/vegetables/:id', async (req, res) => {
 const fruitSchema = new mongoose.Schema({
   name: String,
   cost: Number,
-  image: String
+  image: String,
+  category: { type: String, default: 'fruits' }
 });
 const Fruit = mongoose.model('Fruit', fruitSchema);
 
@@ -311,7 +328,7 @@ const Fruit = mongoose.model('Fruit', fruitSchema);
 // POST - Add fruit
 app.post('/fruits', upload.single('image'), async (req, res) => {
   const { name, cost } = req.body;
-  const image = req.file.filename;
+  const image = req.file.path;
 
   const fruit = new Fruit({ name, cost, image });
   await fruit.save();
@@ -331,7 +348,7 @@ app.put('/fruits/:id', upload.single('image'), async (req, res) => {
   let updateData = { name, cost };
 
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.path;
   }
 
   try {
@@ -363,6 +380,7 @@ const grocerySchema = new mongoose.Schema({
   name: String,
   cost: Number,
   image: String,
+  category: { type: String, default: 'grocery' }
 });
 
 const Grocery = mongoose.model('Grocery', grocerySchema);
@@ -371,7 +389,7 @@ const Grocery = mongoose.model('Grocery', grocerySchema);
 // POST: Add new grocery
 app.post('/groceries', upload.single('image'), async (req, res) => {
   const { name, cost } = req.body;
-  const image = req.file.filename;
+  const image = req.file.path;
 
   const grocery = new Grocery({ name, cost, image });
   await grocery.save();
@@ -391,7 +409,7 @@ app.put('/groceries/:id', upload.single('image'), async (req, res) => {
   let updateData = { name, cost };
 
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.path;
   }
 
   try {
@@ -417,70 +435,34 @@ app.delete('/groceries/:id', async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// app.post("/create-order", async (req, res) => {
-//   console.log("Received order request:", req.body); // 👈 ADD THIS LINE
-
-//   try {
-//     const { totalAmount } = req.body;
-
-//     const order = await paypalClient.orders.create({
-//       intent: "CAPTURE",
-//       purchase_units: [
-//         {
-//           amount: {
-//             currency_code: "USD",
-//             value: totalAmount.toString(),
-//           },
-//         },
-//       ],
-//       application_context: {
-//         return_url: "https://mern-shopping-cart-rl8t.onrender.com/payment-success",
-//         cancel_url: "https://mern-shopping-cart-rl8t.onrender.com/mycart",
-//       },
-//     });
-
-//     res.json({ id: order.id });
-//   } catch (error) {
-//     console.error("PayPal order creation failed:", error.message);
-//     res.status(500).json({ error: "Payment creation failed" });
-//   }
-// });
-
 // app.post("/create-order", async (req, res) => {
 //   console.log("Received order request:", req.body);
 
-//   try {
-//     const { totalAmount } = req.body;
+//   const { total } = req.body;
 
-//     const order = await paypalClient.orders.create({
-//       intent: "CAPTURE",
-//       purchase_units: [
-//         {
-//           amount: {
-//             currency_code: "USD",
-//             value: totalAmount.toString(),
-//           },
+//   const request = new paypal.orders.OrdersCreateRequest();
+//   request.prefer("return=representation");
+//   request.requestBody({
+//     intent: "CAPTURE",
+//     purchase_units: [
+//       {
+//         amount: {
+//           currency_code: "USD",
+//           value: total.toString(),
 //         },
-//       ],
-//       application_context: {
-//         return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
-//         cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
 //       },
-//     });
+//     ],
+//     application_context: {
+//       return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
+//       cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+//     },
+//   });
 
-//     // You need to return the approval link to redirect the user
-//     const approvalUrl = order.links.find(link => link.rel === "approve").href;
+//   try {
+//     const client = getPayPalClient(); // ✅ Correct usage
+//     const order = await client.execute(request);
+
+//     const approvalUrl = order.result.links.find(link => link.rel === "approve").href;
 //     res.json({ approvalUrl });
 
 //   } catch (error) {
@@ -488,7 +470,6 @@ app.delete('/groceries/:id', async (req, res) => {
 //     res.status(500).json({ error: "Payment creation failed" });
 //   }
 // });
-
 
 
 
@@ -507,7 +488,7 @@ app.post("/create-order", async (req, res) => {
     purchase_units: [
       {
         amount: {
-          currency_code: "USD",
+          currency_code: "USD", // Or "INR" if you're using INR
           value: total.toString(),
         },
       },
@@ -515,11 +496,12 @@ app.post("/create-order", async (req, res) => {
     application_context: {
       return_url: "https://mern-shopping-cart-one.vercel.app/payment-success",
       cancel_url: "https://mern-shopping-cart-one.vercel.app/mycart",
+      shipping_preference: "GET_FROM_FILE", // ✅ THIS LINE TELLS PAYPAL TO COLLECT SHIPPING
     },
   });
 
   try {
-    const client = getPayPalClient(); // ✅ Correct usage
+    const client = getPayPalClient();
     const order = await client.execute(request);
 
     const approvalUrl = order.result.links.find(link => link.rel === "approve").href;
@@ -530,6 +512,7 @@ app.post("/create-order", async (req, res) => {
     res.status(500).json({ error: "Payment creation failed" });
   }
 });
+
 
 app.get("/capture-order", async (req, res) => {
   const { token } = req.query;

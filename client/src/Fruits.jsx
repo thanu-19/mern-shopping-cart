@@ -130,7 +130,8 @@ const Fruits = () => {
           <tbody>
             {items.map((item) => (
               <tr key={item._id}>
-                <td><img src={`${backendURL}/uploads/${item.image}`} alt={item.name} width="60" /></td>
+                <td><img src={item.image} alt={item.name} width="60" />
+                </td>
                 <td>{item.name}</td>
                 <td>₹{item.cost}</td>
                 <td>
