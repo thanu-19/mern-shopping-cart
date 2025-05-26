@@ -136,7 +136,7 @@ const ProductPage = () => {
 
         <h2 style={{ marginTop: "60px" }}>🍰 Bakery Items</h2>
         <div className="products-popup">
-          {snacks.map((product) => (
+          {bakery.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

@@ -115,7 +115,7 @@ const Snacks = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit">{editingItem ? 'Update Snack' : 'Add Snack'}</button>
+          <button type="submit">{editingItem ? 'Update Snack' : 'Add Product'}</button>
         </form>
 
         <h2 className="sub-title">📋 All Snacks</h2>

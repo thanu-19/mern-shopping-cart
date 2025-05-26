@@ -88,7 +88,7 @@ const Vegetables = () => {
           <input type="text" name="name" placeholder="Item Name" value={formData.name} onChange={handleChange} required />
           <input type="number" name="cost" placeholder="Cost" value={formData.cost} onChange={handleChange} required />
           <input type="file" name="image" accept="image/*" onChange={handleChange} required />
-          <button type="submit">{editingItem ? "Update" : "Add"} Product</button>
+          <button type="submit">{editingItem ? "Update Vegetable" : "Add Product"}</button>
         </form>
 
         <h2 className="sub-title">📋 All Vegetables</h2>

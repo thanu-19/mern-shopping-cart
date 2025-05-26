@@ -115,7 +115,7 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
-          <button type="submit">Add Product</button>
+          <button type="submit">{editingItem ? "Update Grocery" : "Add Product"}</button>
         </form>
 
         <h2 className="sub-title">📋 All Groceries</h2>
