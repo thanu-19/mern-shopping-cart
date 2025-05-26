@@ -51,7 +51,7 @@ const ProductPage = () => {
 
       fetch(`${backendURL}/bakery`)
       .then((res) => res.json())
-      .then((data) => setGroceries(data))
+      .then((data) => setBakery(data))
       .catch((err) => console.error("Error fetching bakery:", err));
 
     const handleClickOutside = (e) => {
