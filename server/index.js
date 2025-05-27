@@ -577,6 +577,28 @@ app.post("/create-order", async (req, res) => {
 });
 
 
+// app.get("/capture-order", async (req, res) => {
+//   const { token } = req.query;
+
+//   const request = new paypal.orders.OrdersCaptureRequest(token);
+//   request.requestBody({});
+
+//   try {
+//     const client = getPayPalClient();
+//     const capture = await client.execute(request);
+
+//     const shippingAddress = capture.result.purchase_units[0].shipping.address;
+//     res.json({ shippingAddress });
+
+//   } catch (error) {
+//     console.error("Error capturing PayPal order:", error.message);
+//     res.status(500).json({ error: "Failed to capture order" });
+//   }
+// });
+
+
+
+
 app.get("/capture-order", async (req, res) => {
   const { token } = req.query;
 
@@ -587,8 +609,14 @@ app.get("/capture-order", async (req, res) => {
     const client = getPayPalClient();
     const capture = await client.execute(request);
 
-    const shippingAddress = capture.result.purchase_units[0].shipping.address;
-    res.json({ shippingAddress });
+    const shipping = capture.result.purchase_units[0].shipping;
+    const fullName = shipping?.name?.full_name || "No Name";
+    const address = shipping?.address || {};
+
+    res.json({
+      full_name: fullName,
+      address: address
+    });
 
   } catch (error) {
     console.error("Error capturing PayPal order:", error.message);
