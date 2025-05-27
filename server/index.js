@@ -599,8 +599,41 @@ app.post("/create-order", async (req, res) => {
 
 
 
+// app.get("/capture-order", async (req, res) => {
+//   const { token } = req.query;
+
+//   const request = new paypal.orders.OrdersCaptureRequest(token);
+//   request.requestBody({});
+
+//   try {
+//     const client = getPayPalClient();
+//     const capture = await client.execute(request);
+
+//     const shipping = capture.result.purchase_units[0].shipping;
+//     const fullName = shipping?.name?.full_name || "No Name";
+//     const address = shipping?.address || null;
+//     if (!address) {
+//       console.warn("Shipping address not found in PayPal response.");
+//     }
+    
+//     res.json({
+//       full_name: fullName,
+//       address: address
+//     });
+
+//   } catch (error) {
+//     console.error("Error capturing PayPal order:", error.message);
+//     res.status(500).json({ error: "Failed to capture order" });
+//   }
+// });
+
+
+
+
 app.get("/capture-order", async (req, res) => {
   const { token } = req.query;
+
+  console.log("🔁 Received capture request with token:", token);
 
   const request = new paypal.orders.OrdersCaptureRequest(token);
   request.requestBody({});
@@ -609,23 +642,28 @@ app.get("/capture-order", async (req, res) => {
     const client = getPayPalClient();
     const capture = await client.execute(request);
 
-    const shipping = capture.result.purchase_units[0].shipping;
+    console.log("✅ Full PayPal Capture Response:", JSON.stringify(capture.result, null, 2));
+
+    const purchaseUnit = capture.result.purchase_units?.[0];
+    const shipping = purchaseUnit?.shipping;
     const fullName = shipping?.name?.full_name || "No Name";
     const address = shipping?.address || null;
+
     if (!address) {
-      console.warn("Shipping address not found in PayPal response.");
+      console.warn("⚠️ Shipping address not found in PayPal response.");
     }
-    
+
     res.json({
       full_name: fullName,
       address: address
     });
 
   } catch (error) {
-    console.error("Error capturing PayPal order:", error.message);
+    console.error("❌ Error capturing PayPal order:", error);
     res.status(500).json({ error: "Failed to capture order" });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);

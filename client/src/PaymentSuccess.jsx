@@ -60,10 +60,6 @@ const PaymentSuccess = () => {
         ))}
       </ul>
 
-      {/* <h4>📍 Delivery Address:</h4>
-      <p><strong>Name:</strong> {orderDetails.full_name}</p>
-      <p><strong>Address:</strong> {orderDetails.address.address_line_1}, {orderDetails.address.admin_area_2}</p>
-      <p>{orderDetails.address.admin_area_1} - {orderDetails.address.postal_code}</p> */}
       <h4>📍 Delivery Address:</h4>
       {orderDetails.address ? (
         <>
