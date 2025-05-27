@@ -16,21 +16,9 @@ const PaymentSuccess = () => {
       try {
         const res = await fetch(`${backendURL}/capture-order?token=${token}`);
         const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to capture order");
 
         const cartData = JSON.parse(localStorage.getItem(`cartBeforePayment_${userEmail}`));
-
-        // Set order details in localStorage for record keeping
-        // localStorage.setItem(`order_${userEmail}`, JSON.stringify({
-        //   ...cartData,
-        //   status: "Paid",
-        //   address: data.shippingAddress
-        // }));
-
-        // setOrderDetails({ ...cartData, address: data.shippingAddress });
-
-
-
-        // Set order details in localStorage for record keeping
         localStorage.setItem(`order_${userEmail}`, JSON.stringify({
           ...cartData,
           status: "Paid",
@@ -72,10 +60,20 @@ const PaymentSuccess = () => {
         ))}
       </ul>
 
-      <h4>📍 Delivery Address:</h4>
+      {/* <h4>📍 Delivery Address:</h4>
       <p><strong>Name:</strong> {orderDetails.full_name}</p>
       <p><strong>Address:</strong> {orderDetails.address.address_line_1}, {orderDetails.address.admin_area_2}</p>
-      <p>{orderDetails.address.admin_area_1} - {orderDetails.address.postal_code}</p>
+      <p>{orderDetails.address.admin_area_1} - {orderDetails.address.postal_code}</p> */}
+      <h4>📍 Delivery Address:</h4>
+      {orderDetails.address ? (
+        <>
+          <p><strong>Name:</strong> {orderDetails.full_name}</p>
+          <p><strong>Address:</strong> {orderDetails.address.address_line_1}, {orderDetails.address.admin_area_2}</p>
+          <p>{orderDetails.address.admin_area_1} - {orderDetails.address.postal_code}</p>
+        </>
+      ) : (
+        <p><em>No delivery address available</em></p>
+      )}
 
       {/* ✅ Go to Cart Button */}
       <button

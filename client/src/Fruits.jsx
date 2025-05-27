@@ -114,7 +114,7 @@ const Fruits = () => {
             onChange={handleChange}
             required
           />
-          <button type="submit">{editingItem ? 'Update Fruit' : 'Add Product'} Fruit</button>
+          <button type="submit">{editingItem ? 'Update Fruit' : 'Add Product'}</button>
         </form>
 
         <h2 className="sub-title">📋 All Fruits</h2>

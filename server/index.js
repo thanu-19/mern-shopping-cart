@@ -611,8 +611,11 @@ app.get("/capture-order", async (req, res) => {
 
     const shipping = capture.result.purchase_units[0].shipping;
     const fullName = shipping?.name?.full_name || "No Name";
-    const address = shipping?.address || {};
-
+    const address = shipping?.address || null;
+    if (!address) {
+      console.warn("Shipping address not found in PayPal response.");
+    }
+    
     res.json({
       full_name: fullName,
       address: address
